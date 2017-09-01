@@ -26,7 +26,7 @@ class DragAndDrop;
 
 class ImagesDragDropAudioProcessorEditor  : public AudioProcessorEditor,
 public FileBrowserListener, public DragAndDropContainer
-//, public DragAndDropTarget, public FileDragAndDropTarget
+, public DragAndDropTarget, public FileDragAndDropTarget
 {
 public:
     ImagesDragDropAudioProcessorEditor (ImagesDragDropAudioProcessor&);
@@ -35,7 +35,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-   // friend class DragAndDrop;
+    friend class DragAndDrop;
 //    void fileClicked (const File&, const MouseEvent&) override {}
 //    void fileDoubleClicked (const File&) override {}
 //    void browserRootChanged (const File& dir) override {
@@ -53,21 +53,21 @@ public:
 //    //   fileTree.fileTree.refresh();
 //    }
 //    
-//    void itemDropped (const SourceDetails& dragSourceDetails) override
-//    {
-//        path_or_file = dragSourceDetails.description.toString();
-//    //    browserRootChanged (dragSourceDetails.description);
-//        smthIsBeingDraggedOver = false;
-//        repaint();
-//    }
-//    bool isInterestedInDragSource (const SourceDetails& /*dragSourceDetails*/) override
-//    {
-//        // normally you'd check the sourceDescription value to see if it's the
-//        // sort of object that you're interested in before returning true, but for
-//        // the demo, we'll say yes to anything..
-//        return true;
-//    }
-//    
+    void itemDropped (const SourceDetails& dragSourceDetails) override
+    {
+        path_or_file = dragSourceDetails.description.toString();
+    //    browserRootChanged (dragSourceDetails.description);
+        smthIsBeingDraggedOver = false;
+        repaint();
+    }
+    bool isInterestedInDragSource (const SourceDetails& /*dragSourceDetails*/) override
+    {
+        // normally you'd check the sourceDescription value to see if it's the
+        // sort of object that you're interested in before returning true, but for
+        // the demo, we'll say yes to anything..
+        return true;
+    }
+//
 //    void itemDragEnter (const SourceDetails& /*dragSourceDetails*/) override
 //    {
 //        smthIsBeingDraggedOver = true;
@@ -90,13 +90,13 @@ public:
 //    // These methods implement the FileDragAndDropTarget interface, and allow our component
 //    // to accept drag-and-drop of files..
 //    
-//    bool isInterestedInFileDrag (const StringArray& /*files*/) override
-//    {
-//        // normally you'd check these files to see if they're something that you're
-//        // interested in before returning true, but for the demo, we'll say yes to anything..
-//        return true;
-//    }
-//    
+    bool isInterestedInFileDrag (const StringArray& /*files*/) override
+    {
+        // normally you'd check these files to see if they're something that you're
+        // interested in before returning true, but for the demo, we'll say yes to anything..
+        return true;
+    }
+//
 //    void fileDragEnter (const StringArray& /*files*/, int /*x*/, int /*y*/) override
 //    {
 //        smthIsBeingDraggedOver = true;
@@ -113,14 +113,14 @@ public:
 //        repaint();
 //    }
 //
-//    void filesDropped (const StringArray& files, int /*x*/, int /*y*/) override
-//    {
-//     //   path = files.joinIntoString("\n");
-//        
-//        smthIsBeingDraggedOver = false;
-//        repaint();
-//    }
-    
+    void filesDropped (const StringArray& files, int /*x*/, int /*y*/) override
+    {
+     //   path = files.joinIntoString("\n");
+        
+        smthIsBeingDraggedOver = false;
+        repaint();
+    }
+    void browserRootChanged (const File& f) override {dirContentsList.setDirectory (f, true, true);}
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -144,7 +144,7 @@ private:
 //    
     void fileClicked (const File&, const MouseEvent&) override {}
     void fileDoubleClicked (const File&) override {}
-    void browserRootChanged (const File&) override {}
+
 //
     ImagesDragDropAudioProcessor& getProcessor() const
     {
@@ -170,30 +170,73 @@ public:
 //        
 //    }
     
-    DragAndDrop(const String& mypath): message("mess"), path(mypath),
-    somethingIsBeingDraggedOver (false)
+    DragAndDrop(const String& mypath): message("mess"), path(mypath)
+//    ,
+//    somethingIsBeingDraggedOver (false),
+//    fileFilter ("*.jpeg;*.jpg;*.png;*.gif", "*", "Image Filter"),
+//    fileDirectoryThread ("Image File Scanner"),
+//    dirContentsList (&fileFilter, fileDirectoryThread),
+//    fileTree (dirContentsList)
     {
 //        path = processor.filepath;
-        
+    //    path_or_file = p.filepath;
+    //    addAndMakeVisible(d);
+//        setOpaque (true);
+//        dirContentsList.setDirectory (path, true, true);
+//        fileDirectoryThread.startThread (1);
+//        
+////        fileTree.addListener (this);
+//        fileTree.setRepaintsOnMouseActivity(true);
+//        fileTree.setColour (TreeView::backgroundColourId, Colours::whitesmoke.withAlpha (0.6f));
+//        
+//        addAndMakeVisible (fileTree);
         
     }
   //  friend class ImagesDragDropAudioProcessorEditor;
     void paint (Graphics& g) override
     {
         g.fillAll (Colours::grey.withAlpha (1.0f));
+//        // subcomponents in your editor..
+//        Rectangle<int> r (getLocalBounds());
+//        //
+//        // make a list of two of our child components that we want to reposition
+//        Component* comps[] = { &fileTree};
         
+        // this will position the 3 components, one above the other, to fit
+        // vertically into the rectangle provided.
+//        layout.layOutComponents (comps, 1, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
+//        g.fillAll (Colours::darkgrey);   // clear the background
+//        g.setColour (Colours::black);
+//        g.drawRect (getLocalBounds(), 0.5);
         // draw a red line around the comp if the user's currently dragging something over it..
         if (somethingIsBeingDraggedOver)
         {
             g.setColour (Colours::red);
             g.drawRect (getLocalBounds(), 3);
+            //g.drawFittedText ("hellloooo", getLocalBounds().reduced (10, 0), Justification::centred, 4);
         }
         
         g.setColour (getLookAndFeel().findColour (Label::textColourId));
         g.setFont (14.0f);
-        g.drawFittedText (path, getLocalBounds().reduced (10, 0), Justification::centred, 4);
+        g.drawFittedText ("Current Directory: " + path, getLocalBounds().reduced (10, 0), Justification::centred, 4);
+        
+       
     }
-    
+//    void resized() override
+//    {
+//        // subcomponents in your editor..
+//        Rectangle<int> r (getLocalBounds());
+//        //
+//        // make a list of two of our child components that we want to reposition
+//        Component* comps[] = { &fileTree};
+//        
+//        // this will position the 3 components, one above the other, to fit
+//        // vertically into the rectangle provided.
+//        layout.layOutComponents (comps, 1, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
+//        
+//    
+//        
+//    }
     //==============================================================================
     // These methods implement the DragAndDropTarget interface, and allow our component
     // to accept drag-and-drop of objects from other Juce components..
@@ -312,8 +355,14 @@ public:
     
 private:
  //   ImagesDragDropAudioProcessor& processor;
+//    WildcardFileFilter fileFilter;
+//    TimeSliceThread fileDirectoryThread;
+//    DirectoryContentsList dirContentsList;
+// //   StretchableLayoutManager layout;
+//    FileTreeComponent fileTree;
     String message;
     String path;
+    StretchableLayoutManager layout;
     bool somethingIsBeingDraggedOver;
 };
 #endif  // PLUGINEDITOR_H_INCLUDED

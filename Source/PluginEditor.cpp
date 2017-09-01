@@ -72,7 +72,7 @@ void ImagesDragDropAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (Colours::darkgrey);   // clear the background
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 0.5);
-//    browserRootChanged(d->getPath());
+    browserRootChanged(d->getPath());
   //  fileTree.refresh();
 //    if (smthIsBeingDraggedOver)
 //    {
