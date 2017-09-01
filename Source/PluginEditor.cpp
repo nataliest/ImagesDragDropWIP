@@ -30,7 +30,7 @@ resizer (&layout, 1, false)
     fileDirectoryThread.startThread (1);
     
     fileTree.addListener (this);
-    fileTree.setRepaintsOnMouseActivity(true);
+//    fileTree.setRepaintsOnMouseActivity(true);
     fileTree.setColour (TreeView::backgroundColourId, Colours::whitesmoke.withAlpha (0.6f));
     
     addAndMakeVisible (fileTree);
