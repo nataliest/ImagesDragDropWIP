@@ -58,6 +58,7 @@ public:
   //  void setPath(const String& path);
     int lastUIWidth, lastUIHeight;
     String filepath;
+    AudioParameterFloat* gainParam;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImagesDragDropAudioProcessor)
