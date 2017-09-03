@@ -48,7 +48,7 @@ private:
     DragAndDrop* d;
     String path_or_file;
     
-    ImagesDragDropAudioProcessor& processor;
+   // ImagesDragDropAudioProcessor& processor;
     WildcardFileFilter fileFilter;
     TimeSliceThread fileDirectoryThread;
     DirectoryContentsList dirContentsList;
