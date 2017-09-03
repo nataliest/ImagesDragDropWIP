@@ -23,8 +23,6 @@ class DragAndDrop;
 
 class ImagesDragDropAudioProcessorEditor  : public AudioProcessorEditor,
 public FileBrowserListener, public DragAndDropContainer
-//, public DragAndDropTarget
-//, public FileDragAndDropTarget
 {
 public:
     ImagesDragDropAudioProcessorEditor (ImagesDragDropAudioProcessor&);
@@ -45,8 +43,8 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    DragAndDrop* d;
-    String path_or_file;
+    DragAndDrop* dragDropComponent;
+    String pathOrFile;
     
    // ImagesDragDropAudioProcessor& processor;
     WildcardFileFilter fileFilter;
@@ -58,9 +56,10 @@ private:
     
     ImageComponent imagePreview;
     
-    TextEditor te;
+    TextEditor textbox;
     
     StretchableLayoutResizerBar resizerTop;
+    //StretchableLayoutResizerBar resizerMid;
     StretchableLayoutResizerBar resizerBottom;
     
 
@@ -86,10 +85,10 @@ public TextDragAndDropTarget
 public:
 
     
-    DragAndDrop(const String& mypath): message("mess"), path(mypath) {
+    DragAndDrop(const String& mypath): message("Drag and Drop Folder HERE!\nCurrent Directory: " + String(mypath)), path(mypath) {
         
     }
-  //  friend class ImagesDragDropAudioProcessorEditor;
+ 
     void paint (Graphics& g) override
     {
         g.fillAll (Colours::grey.withAlpha (1.0f));
@@ -99,12 +98,12 @@ public:
         {
             g.setColour (Colours::white);
             g.drawRect (getLocalBounds(), 1);
-            //g.drawFittedText ("hellloooo", getLocalBounds().reduced (10, 0), Justification::centred, 4);
+            //g.drawFittedText ("", getLocalBounds().reduced (10, 0), Justification::centred, 4);
         }
         
         g.setColour (getLookAndFeel().findColour (Label::textColourId));
         g.setFont (14.0f);
-        g.drawFittedText ("Current Directory: " + path, getLocalBounds().reduced (10, 0), Justification::centred, 4);
+        g.drawFittedText (message, getLocalBounds().reduced (10, 0), Justification::centred, 4);
         
        
     }
@@ -139,8 +138,9 @@ public:
     
     void itemDropped (const SourceDetails& dragSourceDetails) override
     {
-        path = dragSourceDetails.description.toString();
         
+        message = "Current directory: " + dragSourceDetails.description.toString();
+        path = dragSourceDetails.description.toString();
         somethingIsBeingDraggedOver = false;
         repaint();
     }
@@ -174,8 +174,8 @@ public:
     
     void filesDropped (const StringArray& files, int /*x*/, int /*y*/) override
     {
+        message = "Current directory: " + files.joinIntoString("\n");
         path = files.joinIntoString("\n");
-        
         somethingIsBeingDraggedOver = false;
         repaint();
     }
@@ -207,23 +207,20 @@ public:
     
     void textDropped (const String& text, int /*x*/, int /*y*/) override
     {
-        path = "Text dropped:\n" + text;
+        message = "Text dropped:\n" + text;
         
         somethingIsBeingDraggedOver = false;
         repaint();
     }
     
-    String getMess() {
+    String getMess() const {
         return message;
     }
     
-    String getPath() {
+    String getPath() const {
         return path;
     }
     
-    bool getBool() {
-        return somethingIsBeingDraggedOver;
-    }
     
 private:
 

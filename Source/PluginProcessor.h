@@ -13,7 +13,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-//#include "./DragAndDrop.cpp"
 //==============================================================================
 /**
 */
@@ -57,7 +56,8 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     int lastUIWidth, lastUIHeight;
-    String* filepath;
+    String* filepath; // path to the directory displayed by the plug-in
+    String* comments;
     
 private:
     //==============================================================================
