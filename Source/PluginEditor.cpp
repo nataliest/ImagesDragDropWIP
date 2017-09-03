@@ -14,9 +14,10 @@
 
 //==============================================================================
 ImagesDragDropAudioProcessorEditor::ImagesDragDropAudioProcessorEditor (ImagesDragDropAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p),
+: AudioProcessorEditor (p),
+//processor (p),
 //d(new DragAndDrop),
-d(new DragAndDrop(p.filepath)),
+
 fileFilter ("*.jpeg;*.jpg;*.png;*.gif", "*", "Image Filter"),
 fileDirectoryThread ("Image File Scanner"),
 dirContentsList (&fileFilter, fileDirectoryThread),
@@ -24,14 +25,15 @@ fileTree (dirContentsList),
 resizerTop (&layout, 1, false),
 resizerBottom(&layout, 1, false)
 {
-    path_or_file = getProcessor().filepath;
+    path_or_file = *(p.filepath);
+    d = new DragAndDrop(*(p.filepath));
     addAndMakeVisible(d);
     setOpaque (true);
     dirContentsList.setDirectory (path_or_file, true, true);
     fileDirectoryThread.startThread (1);
     
     fileTree.addListener (this);
-//    fileTree.setRepaintsOnMouseActivity(true);
+    //    fileTree.setRepaintsOnMouseActivity(true);
     fileTree.setColour (TreeView::backgroundColourId, Colours::whitesmoke.withAlpha (0.6f));
     
     addAndMakeVisible (resizerTop);
@@ -63,17 +65,15 @@ resizerBottom(&layout, 1, false)
     layout.setItemLayout (5, -0.1, -0.9, -0.1);
     
     setResizeLimits (400, 400, 1200, 600);
-    setSize (getProcessor().lastUIWidth, processor.lastUIHeight);
+    setSize (getProcessor().lastUIWidth, p.lastUIHeight);
     
 }
 
 ImagesDragDropAudioProcessorEditor::~ImagesDragDropAudioProcessorEditor()
 {
- //   processor.filepath = d->getPath();
-
+    
     fileTree.removeListener (this);
-    getProcessor().lastUIWidth = getWidth();
-    getProcessor().lastUIHeight = getHeight();
+
     delete d;
 }
 
@@ -84,12 +84,8 @@ void ImagesDragDropAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 0.5);
     browserRootChanged(d->getPath());
-  //  fileTree.refresh();
-//    if (smthIsBeingDraggedOver)
-//    {
-//        g.setColour (Colours::red);
-//        g.drawRect (getLocalBounds(), 3);
-//    }
+    *(getProcessor().filepath) = d->getPath();
+
 }
 
 void ImagesDragDropAudioProcessorEditor::resized()
@@ -107,15 +103,4 @@ void ImagesDragDropAudioProcessorEditor::resized()
     getProcessor().lastUIWidth = getWidth();
     getProcessor().lastUIHeight = getHeight();
     
-    
-
 }
-//void ImagesDragDropAudioProcessorEditor::browserRootChanged (const File& dir)  {
-//    if (d->somethingIsBeingDraggedOver) {
-//        dirContentsList.setDirectory(dir, true, true);
-//        
-//        
-//    }
-//    fileTree.refresh();
-//    
-//}
