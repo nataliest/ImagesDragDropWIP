@@ -15,8 +15,8 @@
 //==============================================================================
 ImagesDragDropAudioProcessorEditor::ImagesDragDropAudioProcessorEditor (ImagesDragDropAudioProcessor& p)
 : AudioProcessorEditor (p),
-//processor (p),
-//d(new DragAndDrop),
+//processor (p), // not required if we have the getProcesson() methon implemented
+//d(new DragAndDrop(*(p.filepath))), // could be initialized in the initialization list
 
 fileFilter ("*.jpeg;*.jpg;*.png;*.gif", "*", "Image Filter"),
 fileDirectoryThread ("Image File Scanner"),
@@ -24,16 +24,17 @@ dirContentsList (&fileFilter, fileDirectoryThread),
 fileTree (dirContentsList),
 resizerTop (&layout, 1, false),
 resizerBottom(&layout, 1, false)
+
 {
-    path_or_file = *(p.filepath);
-    d = new DragAndDrop(*(p.filepath));
-    addAndMakeVisible(d);
+    pathOrFile = *(p.filepath);
+    dragDropComponent = new DragAndDrop(*(p.filepath));
+    addAndMakeVisible(dragDropComponent);
     setOpaque (true);
-    dirContentsList.setDirectory (path_or_file, true, true);
+    dirContentsList.setDirectory (pathOrFile, true, true);
     fileDirectoryThread.startThread (1);
     
     fileTree.addListener (this);
-    //    fileTree.setRepaintsOnMouseActivity(true);
+    
     fileTree.setColour (TreeView::backgroundColourId, Colours::whitesmoke.withAlpha (0.6f));
     
     addAndMakeVisible (resizerTop);
@@ -44,37 +45,51 @@ resizerBottom(&layout, 1, false)
     
     addAndMakeVisible (imagePreview);
     
-    te.setText(path_or_file);
-    addAndMakeVisible (te);
+    if (*(p.comments) != "") {
+        textbox.setText(*(p.comments));
+    }
+    
+    textbox.setColour(TextEditor::backgroundColourId, Colours::lightgrey);
+    textbox.setColour(TextEditor::textColourId, Colours::darkgrey);
+    textbox.setMultiLine(true);
+    textbox.setReturnKeyStartsNewLine(true);
+    textbox.setScrollbarsShown(true);
+    textbox.setTextToShowWhenEmpty("Add your comments here...", Colours::grey);
+    addAndMakeVisible (textbox);
     
     // d&d
-    layout.setItemLayout (0, -0.1, -0.9, -0.1);
+    layout.setItemLayout (0, -0.05, -0.1, -0.1);
     
     // resizerTop
     layout.setItemLayout (1, 3, 3, 3);
     
     // fileTree
-    layout.setItemLayout (2, -0.1, -0.9, -0.4);
+    layout.setItemLayout (2, -0.1, -0.9, -0.3);
     
     // resizerBottom
     layout.setItemLayout (3, 3, 3, 3);
     
     // imagePreview
-    layout.setItemLayout (4, -0.1, -0.9, -0.4);
+    layout.setItemLayout (4, -0.1, -0.9, -0.55);
     
+    // textbox
     layout.setItemLayout (5, -0.1, -0.9, -0.1);
     
-    setResizeLimits (400, 400, 1200, 600);
-    setSize (getProcessor().lastUIWidth, p.lastUIHeight);
+    setResizable(true, true);
     
+    
+    setSize (p.lastUIWidth, p.lastUIHeight);
+    setResizeLimits (400, 400, 1200, 600);
 }
 
 ImagesDragDropAudioProcessorEditor::~ImagesDragDropAudioProcessorEditor()
 {
-    
+    if (!textbox.isEmpty()) {
+        *(getProcessor().comments) = textbox.getText();
+    }
     fileTree.removeListener (this);
 
-    delete d;
+    delete dragDropComponent;
 }
 
 //==============================================================================
@@ -83,9 +98,8 @@ void ImagesDragDropAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (Colours::darkgrey);   // clear the background
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 0.5);
-    browserRootChanged(d->getPath());
-    *(getProcessor().filepath) = d->getPath();
-
+    browserRootChanged(dragDropComponent->getPath());
+    *(getProcessor().filepath) = dragDropComponent->getPath();
 }
 
 void ImagesDragDropAudioProcessorEditor::resized()
@@ -94,7 +108,7 @@ void ImagesDragDropAudioProcessorEditor::resized()
     Rectangle<int> r (getLocalBounds());
     //
     // make a list of two of our child components that we want to reposition
-    Component* comps[] = { d, &resizerTop, &fileTree, &resizerBottom, &imagePreview, &te };
+    Component* comps[] = { dragDropComponent, &resizerTop, &fileTree, &resizerBottom, &imagePreview, &textbox };
     
     // this will position the 3 components, one above the other, to fit
     // vertically into the rectangle provided.
