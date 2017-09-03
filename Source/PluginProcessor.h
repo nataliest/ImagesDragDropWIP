@@ -57,7 +57,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
   //  void setPath(const String& path);
     int lastUIWidth, lastUIHeight;
-    String filepath;
+    String* filepath;
     AudioParameterFloat* gainParam;
 private:
     //==============================================================================

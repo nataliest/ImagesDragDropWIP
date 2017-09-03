@@ -14,9 +14,10 @@
 
 //==============================================================================
 ImagesDragDropAudioProcessorEditor::ImagesDragDropAudioProcessorEditor (ImagesDragDropAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p),
+: AudioProcessorEditor (p),
+//processor (p),
 //d(new DragAndDrop),
-d(new DragAndDrop(p.filepath)),
+
 fileFilter ("*.jpeg;*.jpg;*.png;*.gif", "*", "Image Filter"),
 fileDirectoryThread ("Image File Scanner"),
 dirContentsList (&fileFilter, fileDirectoryThread),
@@ -24,7 +25,8 @@ fileTree (dirContentsList),
 resizerTop (&layout, 1, false),
 resizerBottom(&layout, 1, false)
 {
-    path_or_file = getProcessor().filepath;
+    path_or_file = *(p.filepath);
+    d = new DragAndDrop(*(p.filepath));
     addAndMakeVisible(d);
     setOpaque (true);
     dirContentsList.setDirectory (path_or_file, true, true);
@@ -63,7 +65,7 @@ resizerBottom(&layout, 1, false)
     layout.setItemLayout (5, -0.1, -0.9, -0.1);
     
     setResizeLimits (400, 400, 1200, 600);
-    setSize (getProcessor().lastUIWidth, processor.lastUIHeight);
+    setSize (getProcessor().lastUIWidth, p.lastUIHeight);
     
 }
 
@@ -84,6 +86,7 @@ void ImagesDragDropAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds(), 0.5);
     browserRootChanged(d->getPath());
+    *(getProcessor().filepath) = d->getPath();
   //  fileTree.refresh();
 //    if (smthIsBeingDraggedOver)
 //    {
@@ -103,7 +106,7 @@ void ImagesDragDropAudioProcessorEditor::resized()
     // this will position the 3 components, one above the other, to fit
     // vertically into the rectangle provided.
     layout.layOutComponents (comps, 6, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
-    
+   // *(getProcessor().filepath) = d->getPath();
     getProcessor().lastUIWidth = getWidth();
     getProcessor().lastUIHeight = getHeight();
     

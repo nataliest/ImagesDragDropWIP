@@ -41,14 +41,17 @@ public:
             imagePreview.setImage (ImageCache::getFromFile (selectedFile));
     }
 
-    void browserRootChanged (const File& f) override {dirContentsList.setDirectory (f, true, true);}
+    void browserRootChanged (const File& f) override {
+        //*(getProcessor().filepath) = d->getPath();
+        dirContentsList.setDirectory (f, true, true);
+    }
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     DragAndDrop* d;
     String path_or_file;
     
-    ImagesDragDropAudioProcessor& processor;
+//    ImagesDragDropAudioProcessor& processor;
     WildcardFileFilter fileFilter;
     TimeSliceThread fileDirectoryThread;
     DirectoryContentsList dirContentsList;
