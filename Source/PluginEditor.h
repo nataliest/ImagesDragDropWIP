@@ -58,8 +58,10 @@ private:
     
     ImageComponent imagePreview;
     
+    TextEditor te;
     
-    StretchableLayoutResizerBar resizer;
+    StretchableLayoutResizerBar resizerTop;
+    StretchableLayoutResizerBar resizerBottom;
     
 
 //    
@@ -95,8 +97,8 @@ public:
         // draw a red line around the comp if the user's currently dragging something over it..
         if (somethingIsBeingDraggedOver)
         {
-            g.setColour (Colours::red);
-            g.drawRect (getLocalBounds(), 3);
+            g.setColour (Colours::white);
+            g.drawRect (getLocalBounds(), 1);
             //g.drawFittedText ("hellloooo", getLocalBounds().reduced (10, 0), Justification::centred, 4);
         }
         

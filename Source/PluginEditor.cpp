@@ -21,9 +21,10 @@ fileFilter ("*.jpeg;*.jpg;*.png;*.gif", "*", "Image Filter"),
 fileDirectoryThread ("Image File Scanner"),
 dirContentsList (&fileFilter, fileDirectoryThread),
 fileTree (dirContentsList),
-resizer (&layout, 1, false)
+resizerTop (&layout, 1, false),
+resizerBottom(&layout, 1, false)
 {
-    path_or_file = p.filepath;
+    path_or_file = getProcessor().filepath;
     addAndMakeVisible(d);
     setOpaque (true);
     dirContentsList.setDirectory (path_or_file, true, true);
@@ -33,36 +34,46 @@ resizer (&layout, 1, false)
 //    fileTree.setRepaintsOnMouseActivity(true);
     fileTree.setColour (TreeView::backgroundColourId, Colours::whitesmoke.withAlpha (0.6f));
     
+    addAndMakeVisible (resizerTop);
+    
     addAndMakeVisible (fileTree);
     
-    addAndMakeVisible (resizer);
+    addAndMakeVisible (resizerBottom);
     
     addAndMakeVisible (imagePreview);
+    
+    te.setText(path_or_file);
+    addAndMakeVisible (te);
     
     // d&d
     layout.setItemLayout (0, -0.1, -0.9, -0.1);
     
-    // fileTree
-    layout.setItemLayout (1, -0.1, -0.9, -0.4);
+    // resizerTop
+    layout.setItemLayout (1, 3, 3, 3);
     
-    // resizer
-    layout.setItemLayout (2, 3, 3, 3);
+    // fileTree
+    layout.setItemLayout (2, -0.1, -0.9, -0.4);
+    
+    // resizerBottom
+    layout.setItemLayout (3, 3, 3, 3);
     
     // imagePreview
-    layout.setItemLayout (3, -0.1, -0.9, -0.5);
+    layout.setItemLayout (4, -0.1, -0.9, -0.4);
     
+    layout.setItemLayout (5, -0.1, -0.9, -0.1);
     
     setResizeLimits (400, 400, 1200, 600);
-    setSize (p.lastUIWidth, p.lastUIHeight);
+    setSize (getProcessor().lastUIWidth, processor.lastUIHeight);
     
 }
 
 ImagesDragDropAudioProcessorEditor::~ImagesDragDropAudioProcessorEditor()
 {
  //   processor.filepath = d->getPath();
-    
+
     fileTree.removeListener (this);
-    
+    getProcessor().lastUIWidth = getWidth();
+    getProcessor().lastUIHeight = getHeight();
     delete d;
 }
 
@@ -87,11 +98,11 @@ void ImagesDragDropAudioProcessorEditor::resized()
     Rectangle<int> r (getLocalBounds());
     //
     // make a list of two of our child components that we want to reposition
-    Component* comps[] = { d, &fileTree, &resizer, &imagePreview };
+    Component* comps[] = { d, &resizerTop, &fileTree, &resizerBottom, &imagePreview, &te };
     
     // this will position the 3 components, one above the other, to fit
     // vertically into the rectangle provided.
-    layout.layOutComponents (comps, 4, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
+    layout.layOutComponents (comps, 6, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
     
     getProcessor().lastUIWidth = getWidth();
     getProcessor().lastUIHeight = getHeight();
