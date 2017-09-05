@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="JVjCqm" name="ImagesDragDrop" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="com.yourcompany.ImagesDragDrop" includeBinaryInAppConfig="1"
-              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              bundleIdentifier="com.NatalieLebedeva.ImagesDragDrop" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" pluginName="ImagesDragDrop" pluginDesc="ImagesDragDrop"
-              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginManufacturer="NatalieLebedeva" pluginManufacturerCode="Manu"
               pluginCode="Jvjc" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
               pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="ImagesDragDropAU" pluginRTASCategory=""
@@ -62,4 +62,7 @@
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

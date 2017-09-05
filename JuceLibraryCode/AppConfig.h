@@ -227,7 +227,7 @@
  #define JucePlugin_Build_VST              1
 #endif
 #ifndef  JucePlugin_Build_VST3
- #define JucePlugin_Build_VST3             0
+ #define JucePlugin_Build_VST3             1
 #endif
 #ifndef  JucePlugin_Build_AU
  #define JucePlugin_Build_AU               1
@@ -251,7 +251,7 @@
  #define JucePlugin_Desc                   "ImagesDragDrop"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "yourcompany"
+ #define JucePlugin_Manufacturer           "NatalieLebedeva"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
@@ -311,7 +311,7 @@
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.yourcompany.ImagesDragDrop
+ #define JucePlugin_CFBundleIdentifier     com.NatalieLebedeva.ImagesDragDrop
 #endif
 #ifndef  JucePlugin_RTASCategory
  #define JucePlugin_RTASCategory           ePlugInCategory_None
