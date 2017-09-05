@@ -29,8 +29,8 @@ ImagesDragDropAudioProcessor::ImagesDragDropAudioProcessor()
     filepath = new String("~");
     comments = new String("");
     //filepath = "~";
-    lastUIHeight = 500;
-    lastUIWidth = 400;
+    lastUIHeight = 400;
+    lastUIWidth = 500;
 }
 
 ImagesDragDropAudioProcessor::~ImagesDragDropAudioProcessor()

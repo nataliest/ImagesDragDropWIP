@@ -84,7 +84,7 @@ resizerBottom(&layout, 1, false)
 
 ImagesDragDropAudioProcessorEditor::~ImagesDragDropAudioProcessorEditor()
 {
-    if (!textbox.isEmpty()) {
+    if (textbox.getText() != *(getProcessor().comments)) {
         *(getProcessor().comments) = textbox.getText();
     }
     fileTree.removeListener (this);
@@ -100,6 +100,10 @@ void ImagesDragDropAudioProcessorEditor::paint (Graphics& g)
     g.drawRect (getLocalBounds(), 0.5);
     browserRootChanged(dragDropComponent->getPath());
     *(getProcessor().filepath) = dragDropComponent->getPath();
+    if (dragDropComponent->getFiletreeChanged()) {
+        dirContentsList.refresh();
+        dragDropComponent->setFiletreeChanged(false);
+    }
 }
 
 void ImagesDragDropAudioProcessorEditor::resized()
@@ -114,7 +118,29 @@ void ImagesDragDropAudioProcessorEditor::resized()
     // vertically into the rectangle provided.
     layout.layOutComponents (comps, 6, r.getX(), r.getY(), r.getWidth(), r.getHeight(), true, true);
     
+//    if (dragDropComponent->getFiletreeChanged()) {
+//        browserRootChanged(dragDropComponent->getPath());
+//        fileTree.repaint();
+//    }
     getProcessor().lastUIWidth = getWidth();
     getProcessor().lastUIHeight = getHeight();
     
+}
+void ImagesDragDropAudioProcessorEditor::filesDropped (const StringArray& files, int /*x*/, int /*y*/)
+{
+    File file;
+    if (files.size() == 1) {
+        file = files[0];
+        if (file.isDirectory()) { // update path only if 1 directory is dropped
+            dragDropComponent->setPath(files.joinIntoString("\n"));
+        } else {
+            dragDropComponent->copyFilesToCurrentDirectory(files);
+        }
+    } else if (files.size() > 0) {
+        dragDropComponent->copyFilesToCurrentDirectory(files);
+    }
+    dragDropComponent->setMess("Current directory: " + dragDropComponent->getPath());
+    
+    smthIsBeingDraggedOver = false;
+    repaint();
 }
